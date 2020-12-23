@@ -1,18 +1,23 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.UserEntity;
+import com.example.demo.payload.request.UserRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
+import javax.validation.Valid;
 
 public interface IUserService {
-	public List<UserEntity> findAll();
+	ResponseEntity<?> findAll();
 
-	public Optional<UserEntity> findById(Long id);
+	ResponseEntity<?> findById(Long id);
 
-	public void save(UserEntity userEntity);
+	ResponseEntity<?> save(UserRequest userRequest);
 
-	public void deleteById(Long id);
+	ResponseEntity<?> update(Long id, UserRequest userRequest);
 
-	public boolean existsById(Long id);
+	ResponseEntity<?> avatar(Long id, MultipartFile file);
+
+	ResponseEntity<?> deleteById(Long id);
 }

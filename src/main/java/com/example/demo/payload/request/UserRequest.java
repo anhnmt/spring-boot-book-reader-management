@@ -17,6 +17,11 @@ public class UserRequest {
 	@Size(min = 8, max = 200)
 	private String name;
 
+	@NotBlank
+	@NotNull
+	@Size(min = 9, max = 10)
+	private String phone;
+
 	private String address;
 
 	@Min(8)

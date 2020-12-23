@@ -19,8 +19,11 @@ public class UserEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "name", nullable = false)
+	@Column(nullable = false)
 	private String name;
+
+	@Column(nullable = false, unique = true)
+	private String phone;
 
 	private String address;
 
@@ -33,4 +36,11 @@ public class UserEntity {
 
 	@UpdateTimestamp
 	private Date updatedAt;
+
+	public UserEntity(String name, String phone, String address, Integer age) {
+		this.name = name;
+		this.phone = phone;
+		this.address = address;
+		this.age = age;
+	}
 }
