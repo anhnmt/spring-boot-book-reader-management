@@ -16,20 +16,28 @@ import java.util.Optional;
 public class UserService implements IUserService {
 	private final UserRepository userRepository;
 
+	@Override
 	public List<UserEntity> findAll() {
 		return userRepository.findAll();
 	}
 
+	@Override
 	public Optional<UserEntity> findById(Long id) {
 		return userRepository.findById(id);
 	}
 
-	public UserEntity save(UserEntity stock) {
-		return userRepository.save(stock);
+	@Override
+	public void save(UserEntity userEntity) {
+		userRepository.save(userEntity);
 	}
 
 	public void deleteById(Long id) {
 		userRepository.deleteById(id);
+	}
+
+	@Override
+	public boolean existsById(Long id) {
+		return userRepository.existsById(id);
 	}
 
 }

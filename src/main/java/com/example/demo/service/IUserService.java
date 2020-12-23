@@ -10,7 +10,9 @@ public interface IUserService {
 
 	public Optional<UserEntity> findById(Long id);
 
-	public UserEntity save(UserEntity stock);
+	public void save(UserEntity userEntity);
 
 	public void deleteById(Long id);
+
+	public boolean existsById(Long id);
 }
