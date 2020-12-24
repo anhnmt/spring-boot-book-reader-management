@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Common {
 	public static Long getTimeStamp() {
@@ -20,6 +21,9 @@ public class Common {
 
 		if (obj instanceof List)
 			return ((List) obj).isEmpty();
+
+		if (obj instanceof Set)
+			return ((Set) obj).isEmpty();
 
 		if (obj instanceof Map)
 			return ((Map) obj).isEmpty();

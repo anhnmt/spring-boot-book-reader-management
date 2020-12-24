@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.payload.request.UserRequest;
-import com.example.demo.payload.response.BaseMessage;
-import com.example.demo.service.IStorageService;
+import com.example.demo.service.IAWSService;
 import com.example.demo.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,15 +19,14 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class UserController {
 	private final IUserService userService;
-	private final IStorageService storageService;
-	BaseMessage response;
+	private final IAWSService storageService;
+
 	@Value("${AWS_BUCKET_NAME}")
 	private String bucketName;
 
 	@GetMapping
 	public ResponseEntity<?> findAll() {
 		return userService.findAll();
-
 	}
 
 	@PostMapping

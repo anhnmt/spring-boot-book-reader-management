@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Optional;
 
-public interface IStorageService {
+public interface IAWSService {
 	public void save(String path,
 	                 String fileName,
 	                 Optional<Map<String, String>> optionalMetaData,

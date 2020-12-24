@@ -8,6 +8,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Entity
 @Data
@@ -36,6 +38,11 @@ public class UserEntity {
 
 	@UpdateTimestamp
 	private Date updatedAt;
+
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JoinTable(name = "users_books", joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "book_id"))
+	private Set<BookEntity> bookEntities = new TreeSet<>();
 
 	public UserEntity(String name, String phone, String address, Integer age) {
 		this.name = name;

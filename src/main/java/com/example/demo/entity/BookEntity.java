@@ -19,7 +19,7 @@ public class BookEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "name", nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
 
 	private String author;
@@ -31,4 +31,10 @@ public class BookEntity {
 
 	@UpdateTimestamp
 	private Date updatedAt;
+
+	public BookEntity(String name, String author, Double price) {
+		this.name = name;
+		this.author = author;
+		this.price = price;
+	}
 }

@@ -5,12 +5,13 @@ import com.example.demo.payload.request.UserRequest;
 import com.example.demo.payload.response.BaseMessage;
 import com.example.demo.payload.response.ResponseEntityBO;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.IStorageService;
+import com.example.demo.service.IAWSService;
 import com.example.demo.service.IUserService;
 import com.example.demo.util.Common;
 import com.example.demo.util.Constants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +28,8 @@ import java.util.Optional;
 @Slf4j
 public class UserService implements IUserService {
 	private final UserRepository userRepository;
-
-	private final IStorageService storageService;
-	BaseMessage response;
+	private final IAWSService storageService;
+	private BaseMessage response;
 	@Value("${AWS_BUCKET_NAME}")
 	private String bucketName;
 
@@ -173,12 +173,15 @@ public class UserService implements IUserService {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 			}
 
-			String fileName = "avatar-" + id;
+			String fileName = String.format(
+					"avatar-%s.%s",
+					id,
+					FilenameUtils.getExtension(file.getOriginalFilename()));
 
 			storageService.save(bucketName, fileName, storageService.extractMetadata(file), file.getInputStream());
 
 			UserEntity newUserEntity = userEntity.get();
-			newUserEntity.setAvatar(fileName);
+			newUserEntity.setAvatar(storageService.download(bucketName, fileName));
 
 			//tham chiếu đến đối tượng cần trả về
 			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Cập nhật thành công",
@@ -187,7 +190,8 @@ public class UserService implements IUserService {
 
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		} catch (Exception e) {
-			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage(), Common.getTimeStamp());
+			response = new BaseMessage(Constants.ERROR_RESPONSE, "Cập nhật avatar không thành công",
+					Common.getTimeStamp());
 			log.error(Common.createMessageLog(id, response, null, "avatar"));
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -210,7 +214,8 @@ public class UserService implements IUserService {
 
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		} catch (Exception e) {
-			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage(), Common.getTimeStamp());
+			response = new BaseMessage(Constants.ERROR_RESPONSE, "Xoá người dùng không thành công",
+					Common.getTimeStamp());
 			log.error(Common.createMessageLog(id, response, null, "deleteById"));
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);

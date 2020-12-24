@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Data
-public class StorageConfig {
+public class AWSConfig {
 	@Value("${AWS_ACCESS_KEY_ID}")
 	private String accessKey;
 
@@ -33,6 +33,7 @@ public class StorageConfig {
 				.standard()
 				.withRegion(region)
 				.withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+				.withPathStyleAccessEnabled(true)
 				.build();
 	}
 }
