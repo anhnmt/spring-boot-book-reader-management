@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class Seeder implements CommandLineRunner {
 	private final BookRepository bookRepository;
-	private BaseMessage response;
 
 	@Override
 	public void run(String... args) throws Exception {
+		BaseMessage response;
 
 		try {
 			if (bookRepository.count() <= 0) {
@@ -26,10 +26,10 @@ public class Seeder implements CommandLineRunner {
 				bookRepository.save(new BookEntity("Tắt Đèn", "Ngô Tất Tố", 15000.0));
 				bookRepository.save(new BookEntity("Vợ Nhặt", "Kim Lân", 8000.0));
 				bookRepository.save(new BookEntity("Số Đỏ", "Vũ Trọng Phụng", 25000.0));
-			}
 
-			response = new BaseMessage(Constants.ERROR_RESPONSE, "BookSeeder success");
-			log.error(Common.createMessageLog(null, response, null, "run"));
+				response = new BaseMessage(Constants.SUCCESS_RESPONSE, "BookSeeder success");
+				log.error(Common.createMessageLog(null, response, null, "run"));
+			}
 		} catch (Exception e) {
 			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage());
 			log.error(Common.createMessageLog(null, response, null, "run"));

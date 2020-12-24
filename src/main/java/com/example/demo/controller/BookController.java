@@ -21,6 +21,11 @@ public class BookController {
 		return bookService.findAll();
 	}
 
+	@GetMapping("/search")
+	public ResponseEntity<?> search(@Valid @RequestParam String name) {
+		return bookService.searchByName(name);
+	}
+
 	@PostMapping
 	public ResponseEntity<?> create(@Valid @RequestBody BookRequest bookRequest) {
 		return bookService.save(bookRequest);

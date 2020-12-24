@@ -8,6 +8,8 @@ public interface IBookService {
 
 	ResponseEntity<?> findById(Long id);
 
+	ResponseEntity<?> searchByName(String name);
+
 	ResponseEntity<?> save(BookRequest bookRequest);
 
 	ResponseEntity<?> update(Long id, BookRequest bookRequest);

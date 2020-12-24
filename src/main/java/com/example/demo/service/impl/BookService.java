@@ -83,6 +83,32 @@ public class BookService implements IBookService {
 	}
 
 	@Override
+	public ResponseEntity<?> searchByName(String name) {
+		try {
+			Optional<BookEntity> bookEntity = bookRepository.findByNameContainingIgnoreCase(name);
+
+			if (!bookEntity.isPresent()) {
+				//sử dựng hàm khởi tạo để giúp code ngắn gọn hơn
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không tìm thấy sách!");
+				log.error(Common.createMessageLog(name, response, null, "searchByName"));
+
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+			}
+
+			//tham chiếu đến đối tượng cần trả về
+			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Thành công", bookEntity);
+			log.info(Common.createMessageLog(name, response, null, "searchByName"));
+
+			return ResponseEntity.status(HttpStatus.OK).body(response);
+		} catch (Exception e) {
+			response = new BaseMessage(Constants.ERROR_RESPONSE, "Không tìm thấy sách!");
+			log.error(Common.createMessageLog(name, response, null, "searchByName"));
+
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
+	}
+
+	@Override
 	public ResponseEntity<?> save(BookRequest bookRequest) {
 		try {
 			if (bookRepository.existsByName(bookRequest.getName())) {
