@@ -36,19 +36,19 @@ public class BookService implements IBookService {
 
 			if (Common.isNullOrEmpty(bookEntities)) {
 				//sử dựng hàm khởi tạo để giúp code ngắn gọn hơn
-				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có cuốn sách nào!", Common.getTimeStamp());
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có cuốn sách nào!");
 				log.error(Common.createMessageLog(null, response, null, "findAll"));
 
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 			}
 
 			//tham chiếu đến đối tượng cần trả về
-			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Thành công", Common.getTimeStamp(), bookEntities);
+			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Thành công", bookEntities);
 			log.info(Common.createMessageLog(null, response, null, "findAll"));
 
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		} catch (Exception e) {
-			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage(), Common.getTimeStamp());
+			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage());
 			log.error(Common.createMessageLog(null, response, null, "findAll"));
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -63,19 +63,19 @@ public class BookService implements IBookService {
 
 			if (!bookEntity.isPresent()) {
 				//sử dựng hàm khởi tạo để giúp code ngắn gọn hơn
-				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có cuốn sách này!", Common.getTimeStamp());
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có cuốn sách này!");
 				log.error(Common.createMessageLog(id, response, null, "findById"));
 
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 			}
 
 			//tham chiếu đến đối tượng cần trả về
-			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Thành công", Common.getTimeStamp(), bookEntity);
+			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Thành công", bookEntity);
 			log.info(Common.createMessageLog(id, response, null, "findById"));
 
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		} catch (Exception e) {
-			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage(), Common.getTimeStamp());
+			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage());
 			log.error(Common.createMessageLog(id, response, null, "findById"));
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -86,7 +86,7 @@ public class BookService implements IBookService {
 	public ResponseEntity<?> save(BookRequest bookRequest) {
 		try {
 			if (bookRepository.existsByName(bookRequest.getName())) {
-				response = new BaseMessage(Constants.ERROR_RESPONSE, "Sách đã tồn tại", Common.getTimeStamp());
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "Sách đã tồn tại");
 				log.error(Common.createMessageLog(null, response, null, "save"));
 
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -98,13 +98,12 @@ public class BookService implements IBookService {
 					bookRequest.getPrice()
 			);
 
-			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Thêm thành công",
-					Common.getTimeStamp(), bookRepository.save(bookEntity));
+			response = new BaseMessage(Constants.SUCCESS_RESPONSE, "Thêm thành công");
 			log.info(Common.createMessageLog(bookRequest, response, null, "save"));
 
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		} catch (Exception e) {
-			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage(), Common.getTimeStamp());
+			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage());
 			log.error(Common.createMessageLog(null, response, null, "save"));
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -118,7 +117,7 @@ public class BookService implements IBookService {
 
 			if (!bookEntity.isPresent()) {
 				//sử dựng hàm khởi tạo để giúp code ngắn gọn hơn
-				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có cuốn sách này!", Common.getTimeStamp());
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có cuốn sách này!");
 				log.error(Common.createMessageLog(new Object[]{id, bookRequest}, response, null, "update"));
 
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -130,7 +129,7 @@ public class BookService implements IBookService {
 					bookRepository.existsByName(bookRequest.getName())
 							&& !newBookEntity.getName().equals(bookRequest.getName())
 			) {
-				response = new BaseMessage(Constants.ERROR_RESPONSE, "Sách đã tồn tại", Common.getTimeStamp());
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "Sách đã tồn tại");
 				log.error(Common.createMessageLog(null, response, null, "save"));
 
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -142,13 +141,12 @@ public class BookService implements IBookService {
 			bookRepository.save(newBookEntity);
 
 			//tham chiếu đến đối tượng cần trả về
-			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Cập nhật thành công",
-					Common.getTimeStamp(), newBookEntity);
+			response = new BaseMessage(Constants.SUCCESS_RESPONSE, "Cập nhật thành công");
 			log.info(Common.createMessageLog(new Object[]{id, bookRequest}, response, null, "update"));
 
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		} catch (Exception e) {
-			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage(), Common.getTimeStamp());
+			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage());
 			log.error(Common.createMessageLog(new Object[]{id, bookRequest}, response, null, "update"));
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -159,14 +157,14 @@ public class BookService implements IBookService {
 	public ResponseEntity<?> deleteById(Long id) {
 		try {
 			if (!bookRepository.existsById(id)) {
-				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có cuốn sách này!", Common.getTimeStamp());
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có cuốn sách này!");
 				log.error(Common.createMessageLog(id, response, null, "deleteById"));
 
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 			}
 
 			bookRepository.deleteById(id);
-			response = new BaseMessage(Constants.SUCCESS_RESPONSE, "Xoá thành công", Common.getTimeStamp());
+			response = new BaseMessage(Constants.SUCCESS_RESPONSE, "Xoá thành công");
 			log.info(Common.createMessageLog(id, response, null, "deleteById"));
 
 			return ResponseEntity.status(HttpStatus.OK).body(response);

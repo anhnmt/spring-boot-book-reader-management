@@ -9,6 +9,7 @@ import com.example.demo.service.IAWSService;
 import com.example.demo.service.IUserService;
 import com.example.demo.util.Common;
 import com.example.demo.util.Constants;
+import com.example.demo.util.Excel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -40,19 +41,19 @@ public class UserService implements IUserService {
 
 			if (Common.isNullOrEmpty(userEntities)) {
 				//sử dựng hàm khởi tạo để giúp code ngắn gọn hơn
-				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có người dùng nào!", Common.getTimeStamp());
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có người dùng nào!");
 				log.error(Common.createMessageLog(null, response, null, "findAll"));
 
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 			}
 
 			//tham chiếu đến đối tượng cần trả về
-			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Thành công", Common.getTimeStamp(), userEntities);
+			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Thành công", userEntities);
 			log.info(Common.createMessageLog(null, response, null, "findAll"));
 
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		} catch (Exception e) {
-			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage(), Common.getTimeStamp());
+			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage());
 			log.error(Common.createMessageLog(null, response, null, "findAll"));
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -66,19 +67,19 @@ public class UserService implements IUserService {
 
 			if (!userEntity.isPresent()) {
 				//sử dựng hàm khởi tạo để giúp code ngắn gọn hơn
-				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có người dùng này!", Common.getTimeStamp());
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có người dùng này!");
 				log.error(Common.createMessageLog(id, response, null, "findById"));
 
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 			}
 
 			//tham chiếu đến đối tượng cần trả về
-			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Thành công", Common.getTimeStamp(), userEntity);
+			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Thành công", userEntity);
 			log.info(Common.createMessageLog(id, response, null, "findById"));
 
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		} catch (Exception e) {
-			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage(), Common.getTimeStamp());
+			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage());
 			log.error(Common.createMessageLog(id, response, null, "findById"));
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -89,7 +90,7 @@ public class UserService implements IUserService {
 	public ResponseEntity<?> save(UserRequest userRequest) {
 		try {
 			if (userRepository.existsByPhone(userRequest.getPhone())) {
-				response = new BaseMessage(Constants.ERROR_RESPONSE, "Số điện thoại đã tồn tại", Common.getTimeStamp());
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "Số điện thoại đã tồn tại");
 				log.error(Common.createMessageLog(null, response, null, "save"));
 
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -102,13 +103,14 @@ public class UserService implements IUserService {
 					userRequest.getAge()
 			);
 
-			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Thêm thành công",
-					Common.getTimeStamp(), userRepository.save(userEntity));
+			userRepository.save(userEntity);
+
+			response = new BaseMessage(Constants.SUCCESS_RESPONSE, "Thêm thành công");
 			log.info(Common.createMessageLog(userRequest, response, null, "save"));
 
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		} catch (Exception e) {
-			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage(), Common.getTimeStamp());
+			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage());
 			log.error(Common.createMessageLog(null, response, null, "save"));
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -122,7 +124,7 @@ public class UserService implements IUserService {
 
 			if (!userEntity.isPresent()) {
 				//sử dựng hàm khởi tạo để giúp code ngắn gọn hơn
-				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có người dùng này!", Common.getTimeStamp());
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có người dùng này!");
 				log.error(Common.createMessageLog(new Object[]{id, userRequest}, response, null, "update"));
 
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -134,7 +136,7 @@ public class UserService implements IUserService {
 					userRepository.existsByPhone(userRequest.getPhone())
 							&& !newUserEntity.getPhone().equals(userRequest.getPhone())
 			) {
-				response = new BaseMessage(Constants.ERROR_RESPONSE, "Số điện thoại đã tồn tại", Common.getTimeStamp());
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "Số điện thoại đã tồn tại");
 				log.error(Common.createMessageLog(null, response, null, "save"));
 
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -147,13 +149,12 @@ public class UserService implements IUserService {
 			userRepository.save(newUserEntity);
 
 			//tham chiếu đến đối tượng cần trả về
-			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Cập nhật thành công",
-					Common.getTimeStamp(), userEntity.get());
+			response = new BaseMessage(Constants.SUCCESS_RESPONSE, "Cập nhật thành công");
 			log.info(Common.createMessageLog(new Object[]{id, userRequest}, response, null, "update"));
 
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		} catch (Exception e) {
-			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage(), Common.getTimeStamp());
+			response = new BaseMessage(Constants.ERROR_RESPONSE, e.getMessage());
 			log.error(Common.createMessageLog(new Object[]{id, userRequest}, response, null, "update"));
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -167,7 +168,7 @@ public class UserService implements IUserService {
 
 			if (!userEntity.isPresent()) {
 				//sử dựng hàm khởi tạo để giúp code ngắn gọn hơn
-				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có người dùng này!", Common.getTimeStamp());
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có người dùng này!");
 				log.error(Common.createMessageLog(id, response, null, "avatar"));
 
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -182,10 +183,10 @@ public class UserService implements IUserService {
 
 			UserEntity newUserEntity = userEntity.get();
 			newUserEntity.setAvatar(storageService.download(bucketName, fileName));
+			userRepository.save(newUserEntity);
 
 			//tham chiếu đến đối tượng cần trả về
-			response = new ResponseEntityBO<>(Constants.SUCCESS_RESPONSE, "Cập nhật thành công",
-					Common.getTimeStamp(), userRepository.save(newUserEntity));
+			response = new BaseMessage(Constants.SUCCESS_RESPONSE, "Cập nhật avatar thành công");
 			log.info(Common.createMessageLog(id, response, null, "avatar"));
 
 			return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -199,17 +200,46 @@ public class UserService implements IUserService {
 	}
 
 	@Override
+	public ResponseEntity<?> upload(MultipartFile file) {
+		try {
+			List<UserEntity> userEntities = Excel.readSheetToUsers(file.getInputStream());
+
+			if (Common.isNullOrEmpty(userEntities)) {
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "File không có người dùng",
+						Common.getTimeStamp());
+				log.error(Common.createMessageLog(file.getOriginalFilename(), response, null, "upload"));
+
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+			}
+
+			userRepository.saveAll(userEntities);
+
+			//tham chiếu đến đối tượng cần trả về
+			response = new BaseMessage(Constants.SUCCESS_RESPONSE, "Upload người dùng thành công");
+			log.info(Common.createMessageLog(file.getOriginalFilename(), response, null, "upload"));
+
+			return ResponseEntity.status(HttpStatus.OK).body(response);
+		} catch (Exception e) {
+			response = new BaseMessage(Constants.ERROR_RESPONSE, "Upload không thành công",
+					Common.getTimeStamp());
+			log.error(Common.createMessageLog(file.getOriginalFilename(), response, null, "upload"));
+
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
+	}
+
+	@Override
 	public ResponseEntity<?> deleteById(Long id) {
 		try {
 			if (!userRepository.existsById(id)) {
-				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có người dùng này!", Common.getTimeStamp());
+				response = new BaseMessage(Constants.ERROR_RESPONSE, "Không có người dùng này!");
 				log.error(Common.createMessageLog(id, response, null, "deleteById"));
 
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
 			}
 
 			userRepository.deleteById(id);
-			response = new BaseMessage(Constants.SUCCESS_RESPONSE, "Xoá thành công", Common.getTimeStamp());
+			response = new BaseMessage(Constants.SUCCESS_RESPONSE, "Xoá thành công");
 			log.info(Common.createMessageLog(id, response, null, "deleteById"));
 
 			return ResponseEntity.status(HttpStatus.OK).body(response);

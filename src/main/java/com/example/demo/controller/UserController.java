@@ -19,10 +19,6 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class UserController {
 	private final IUserService userService;
-	private final IAWSService storageService;
-
-	@Value("${AWS_BUCKET_NAME}")
-	private String bucketName;
 
 	@GetMapping
 	public ResponseEntity<?> findAll() {
@@ -55,10 +51,9 @@ public class UserController {
 		return userService.avatar(id, file);
 	}
 
-	@PostMapping("/{id}/upload")
-	public ResponseEntity<?> upload(@PathVariable Long id,
-	                                @RequestBody MultipartFile multipartFile) {
-		return null;
+	@PostMapping("/upload")
+	public ResponseEntity<?> upload(@RequestBody MultipartFile file) {
+		return userService.upload(file);
 	}
 
 	@DeleteMapping("/{id}")

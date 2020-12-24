@@ -19,5 +19,7 @@ public interface IUserService {
 
 	ResponseEntity<?> avatar(Long id, MultipartFile file);
 
+	ResponseEntity<?> upload(MultipartFile file);
+
 	ResponseEntity<?> deleteById(Long id);
 }

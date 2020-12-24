@@ -17,13 +17,4 @@ public class ResponseEntityBO<T> extends BaseMessage {
 		super(errorResponse, s);
 		this.result = result;
 	}
-
-	public ResponseEntityBO(Boolean errorResponse, String s, long timeStamp) {
-		super(errorResponse, s, timeStamp);
-	}
-
-	public ResponseEntityBO(Boolean errorResponse, String s, long timeStamp, T result) {
-		super(errorResponse, s, timeStamp);
-		this.result = result;
-	}
 }
